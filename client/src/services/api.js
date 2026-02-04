@@ -1,7 +1,11 @@
 import axios from 'axios';
+import mockAPI from './mockAPI.js';
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 const API_URL = BASE_URL.endsWith('/api') ? BASE_URL : `${BASE_URL}/api`;
+
+// Check if we're in production without a backend
+const USE_MOCK_API = !import.meta.env.VITE_API_URL || import.meta.env.VITE_USE_MOCK === 'true';
 
 const api = axios.create({
     baseURL: API_URL,
@@ -45,27 +49,31 @@ api.interceptors.response.use(
 export default api;
 
 export const authAPI = {
-    login: (credentials) => api.post('/auth/login', credentials),
-    register: (userData) => api.post('/auth/register', userData),
-    getProfile: () => api.get('/auth/me'),
+    login: (credentials) => USE_MOCK_API ? mockAPI.login(credentials) : api.post('/auth/login', credentials),
+    register: (userData) => USE_MOCK_API ? mockAPI.register(userData) : api.post('/auth/register', userData),
+    getProfile: () => USE_MOCK_API ? Promise.resolve({}) : api.get('/auth/me'),
 };
 
 export const productAPI = {
-    getProducts: (params) => api.get('/products', { params }),
-    getProductById: (id) => api.get(`/products/${id}`),
-    search: (q) => api.get('/products/search', { params: { q } }),
+    getProducts: (params) => USE_MOCK_API ? mockAPI.getProducts(params) : api.get('/products', { params }),
+    getProductById: (id) => USE_MOCK_API ? mockAPI.getProductById(id) : api.get(`/products/${id}`),
+    search: (q) => USE_MOCK_API ? mockAPI.getProducts({search: q}) : api.get('/products/search', { params: { q } }),
 };
 
 export const cartAPI = {
-    getCart: () => api.get('/cart'),
-    addToCart: (data) => api.post('/cart', data),
-    updateItem: (itemId, quantity) => api.put(`/cart/${itemId}`, { quantity }),
-    removeItem: (itemId) => api.delete(`/cart/${itemId}`),
-    clear: () => api.post('/cart/clear'),
+    getCart: () => USE_MOCK_API ? mockAPI.getCart() : api.get('/cart'),
+    addToCart: (data) => USE_MOCK_API ? mockAPI.addToCart(data) : api.post('/cart', data),
+    updateItem: (itemId, quantity) => USE_MOCK_API ? Promise.resolve({}) : api.put(`/cart/${itemId}`, { quantity }),
+    removeItem: (itemId) => USE_MOCK_API ? Promise.resolve({}) : api.delete(`/cart/${itemId}`),
+    clear: () => USE_MOCK_API ? Promise.resolve({}) : api.post('/cart/clear'),
 };
 
 export const orderAPI = {
-    create: (orderData) => api.post('/orders', orderData),
-    getMyOrders: () => api.get('/orders/myorders'),
-    getOrderById: (id) => api.get(`/orders/${id}`),
+    create: (orderData) => USE_MOCK_API ? mockAPI.createOrder(orderData) : api.post('/orders', orderData),
+    getMyOrders: () => USE_MOCK_API ? mockAPI.getMyOrders() : api.get('/orders/myorders'),
+    getOrderById: (id) => USE_MOCK_API ? Promise.resolve({}) : api.get(`/orders/${id}`),
+};
+
+export const adminAPI = {
+    getDashboard: () => USE_MOCK_API ? mockAPI.getDashboard() : api.get('/admin/dashboard'),
 };
