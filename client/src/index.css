@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #F97316;
+  --primary-dark: #EA580C;
+  --secondary: #0F172A;
+  --accent: #F97316;
+  --background: #FFFFFF;
+  --surface: #F8FAFC;
+  --text-main: #0F172A;
+  --text-muted: #64748B;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2.5rem;
+  --shadow-premium: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+}
+
+@layer base {
+  body {
+    @apply font-jakarta text-text-main bg-white antialiased selection:bg-orange-100 selection:text-orange-600;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-outfit tracking-tighter;
+  }
+}
+
+@layer components {
+  .max-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn-primary {
+    @apply px-8 py-4 bg-orange-600 text-white font-black text-sm uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-orange-950/20 hover:bg-orange-700 hover:-translate-y-1 active:scale-95 transition-all duration-300 flex items-center justify-center;
+  }
+
+  .btn-secondary {
+    @apply px-8 py-4 bg-white border border-gray-100 text-gray-900 font-black text-sm uppercase tracking-[0.2em] rounded-2xl shadow-sm hover:bg-gray-50 hover:-translate-y-1 active:scale-95 transition-all duration-300 flex items-center justify-center;
+  }
+
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-xl border border-white/40 shadow-premium rounded-[3rem];
+  }
+
+  .nav-link {
+    @apply relative text-sm font-black uppercase tracking-widest text-gray-400 hover:text-orange-600 transition-colors py-2;
+  }
+
+  .nav-link.active {
+    @apply text-orange-600;
+  }
+
+  .nav-link.active::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-0.5 bg-orange-500 rounded-full;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-200 rounded-full hover:bg-orange-200 transition-colors;
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.text-gradient {
+  @apply bg-gradient-to-r from-orange-500 to-orange-700 bg-clip-text text-transparent;
+}
+
+/* Card Effects */
+.product-card-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.product-card-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg,
+      transparent,
+      rgba(255, 255, 255, 0.05),
+      transparent);
+  transform: rotate(45deg);
+  transition: 0.8s;
+}
+
+.product-card-shine:hover::after {
+  left: 100%;
+}
