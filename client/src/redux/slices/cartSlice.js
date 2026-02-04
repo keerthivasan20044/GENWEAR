@@ -1,15 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const cartFromStorage = localStorage.getItem('cartItems')
+    ? JSON.parse(localStorage.getItem('cartItems'))
+    : [];
+
+const initialState = {
+    items: cartFromStorage,
+    totalItems: cartFromStorage.reduce((acc, item) => acc + Number(item.quantity), 0),
+    totalPrice: cartFromStorage.reduce((acc, item) => acc + (Number(item.price || 0) * Number(item.quantity)), 0),
+    isOpen: false,
+    loading: false,
+    error: null,
+};
+
 const cartSlice = createSlice({
     name: 'cart',
-    initialState: {
-        items: [],
-        totalItems: 0,
-        totalPrice: 0,
-        isOpen: false,
-        loading: false,
-        error: null,
-    },
+    initialState,
     reducers: {
         setCartOpen: (state, action) => {
             state.isOpen = action.payload;
@@ -45,6 +51,8 @@ const cartSlice = createSlice({
             state.totalItems = state.items.reduce((acc, item) => acc + Number(item.quantity), 0);
             state.totalPrice = state.items.reduce((acc, item) => acc + (Number(item.price || 0) * Number(item.quantity)), 0);
             state.isOpen = true; // Automatically open the drawer
+
+            localStorage.setItem('cartItems', JSON.stringify(state.items));
         },
 
         updateCartItem: (state, action) => {
@@ -58,6 +66,8 @@ const cartSlice = createSlice({
             }
             state.totalItems = state.items.reduce((acc, item) => acc + Number(item.quantity), 0);
             state.totalPrice = state.items.reduce((acc, item) => acc + (Number(item.price || 0) * Number(item.quantity)), 0);
+
+            localStorage.setItem('cartItems', JSON.stringify(state.items));
         },
 
         removeFromCart: (state, action) => {
@@ -65,12 +75,16 @@ const cartSlice = createSlice({
             state.items = state.items.filter(item => item._id !== id);
             state.totalItems = state.items.reduce((acc, item) => acc + Number(item.quantity), 0);
             state.totalPrice = state.items.reduce((acc, item) => acc + (Number(item.price || 0) * Number(item.quantity)), 0);
+
+            localStorage.setItem('cartItems', JSON.stringify(state.items));
         },
 
         clearCart: (state) => {
             state.items = [];
             state.totalItems = 0;
             state.totalPrice = 0;
+
+            localStorage.removeItem('cartItems');
         }
     }
 });

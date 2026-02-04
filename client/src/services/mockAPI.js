@@ -12,7 +12,7 @@ const MOCK_USERS = [
     _id: '2',
     firstName: 'John',
     lastName: 'Doe',
-    email: 'john@example.com',
+    email: 'user@example.com',
     password: 'password123',
     role: 'user'
   }

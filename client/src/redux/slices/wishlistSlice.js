@@ -1,7 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+const wishlistFromStorage = localStorage.getItem('wishlistItems')
+    ? JSON.parse(localStorage.getItem('wishlistItems'))
+    : [];
+
 const initialState = {
-    items: [], // Array of product IDs
+    items: wishlistFromStorage, // Array of product IDs
 }
 
 const wishlistSlice = createSlice({
@@ -13,11 +17,13 @@ const wishlistSlice = createSlice({
             if (!state.items.includes(productId)) {
                 state.items.push(productId)
             }
+            localStorage.setItem('wishlistItems', JSON.stringify(state.items));
         },
 
         removeFromWishlist: (state, action) => {
             const productId = action.payload
             state.items = state.items.filter(id => id !== productId)
+            localStorage.setItem('wishlistItems', JSON.stringify(state.items));
         },
 
         toggleWishlist: (state, action) => {
@@ -27,10 +33,12 @@ const wishlistSlice = createSlice({
             } else {
                 state.items.push(productId)
             }
+            localStorage.setItem('wishlistItems', JSON.stringify(state.items));
         },
 
         clearWishlist: (state) => {
             state.items = []
+            localStorage.removeItem('wishlistItems');
         },
     },
 })

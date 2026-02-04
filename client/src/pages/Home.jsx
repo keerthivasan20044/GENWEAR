@@ -46,7 +46,7 @@ const Home = () => {
         {
             title: "KIDS' RANGE",
             subtitle: "FUN & COLORFUL",
-            image: "https://images.unsplash.com/photo-1519238263413-08988f1aec71?w=800&q=80",
+            image: "https://images.unsplash.com/photo-1514090458221-65bb69cf63e6?w=800&q=80",
             path: "/products?gender=kids",
             size: "medium"
         }
